@@ -1,0 +1,26 @@
+<h1 style="margin-bottom: 2em; color:#4a551b">Avocado Average Price Prediction</h1>
+
+{% if form %}
+<form action="{% url 'predict' %}" method="POST">
+    {% csrf_token %}
+    {% for field in form %}
+        <div style="margin-top: 1em;">
+            <label for="{{ field.auto_id }}" id="{{ field.auto_id }}-label" style="margin-right: 2em;">{{ field.label }}</label>
+            {{ field }}
+        </div>
+    {% endfor %}
+    <input type="submit" value="Predict" style="margin-top: 2em;">
+</form>
+{% elif data and predicted_average_price %}
+<div>
+    {% for field_name, value in data.items %}
+    <div style="margin-bottom: 2em;">
+        <label for="{{ field_name }}" id="{{ field_name }}-label" style="margin-right: 2em;">{{ field_name }}</label>
+        <span id="{{ field_name }}">{{ value }}</span>
+    </div>
+    {% endfor %}
+</div>
+<div style="margin-top: 2em;">
+    <h4>Predicted Average Price: {{ predicted_average_price }}</h4>
+</div>
+{% endif %}
