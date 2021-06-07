@@ -1,4 +1,4 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponseRedirect, HttpResponseNotAllowed, HttpResponseBadRequest
 from django.shortcuts import render
 from django.views.generic.edit import FormView
 
@@ -14,15 +14,27 @@ class AvocadoDataFormView(FormView):
 
 def predict(request):
     if request.method != 'POST':
-        return HttpResponse("Method Not Allowed", status=405)
+        return HttpResponseNotAllowed('POST')
 
     data = {field: request.POST.get(field) for field in AvocadoDataForm.Meta.fields}
+    data['organic'] = data['organic'] or False
+
     serializer = AvocadoDataSerializer(data=data)
     if serializer.is_valid():
         prediction = serializer.data.get('sold_plu_4046') + serializer.data.get('sold_plu_4225') + 2*serializer.data.get('small_bags') + 1000
 
         context = {'predicted_average_price': prediction}
-        context['data'] = { k.replace("_", " "): v for k,v in serializer.data.items()}
+        input_type = {'int': 'number', 'bool': 'checkbox', 'str': 'text'}
+        context['form'] = [ 
+            { 
+                'auto_id': "id_{}".format(k),
+                'name': k,
+                'label': k.replace("_", " "),
+                'data': v,
+                'widget_type': input_type[type(v).__name__]
+            }
+            for k,v in serializer.data.items()]
+
         return render(request, AvocadoDataFormView.template_name, context)
 
-    return JsonResponse(serializer.errors, status=400)    
+    return HttpResponseBadRequest()
