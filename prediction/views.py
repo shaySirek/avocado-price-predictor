@@ -1,6 +1,7 @@
-from django.http import HttpResponseRedirect, HttpResponseNotAllowed, HttpResponseBadRequest
+from django.http import HttpResponseBadRequest
 from django.shortcuts import render
 from django.views.generic.edit import FormView
+from django.views.decorators.http import require_http_methods
 
 from .models import AvocadoData 
 from .forms import AvocadoDataForm
@@ -12,10 +13,8 @@ class AvocadoDataFormView(FormView):
     form_class = AvocadoDataForm
 
 
+@require_http_methods(["POST"])
 def predict(request):
-    if request.method != 'POST':
-        return HttpResponseNotAllowed('POST')
-
     data = {field: request.POST.get(field) for field in AvocadoDataForm.Meta.fields}
     data['organic'] = data['organic'] or False
 
