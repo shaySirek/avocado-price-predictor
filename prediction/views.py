@@ -22,17 +22,6 @@ def predict(request):
         return HttpResponseBadRequest()
 
     prediction = serializer.data.get('sold_plu_4046') + serializer.data.get('sold_plu_4225') + 2*serializer.data.get('small_bags') + 1000
-
-    context = {'predicted_average_price': prediction}
-    input_type = {'int': 'number', 'bool': 'checkbox', 'str': 'text'}
-    context['form'] = [ 
-        { 
-            'auto_id': "id_{}".format(k),
-            'name': k,
-            'label': k.replace("_", " "),
-            'data': v,
-            'widget_type': input_type[type(v).__name__]
-        }
-        for k,v in serializer.data.items()]
+    context = {'predicted_average_price': prediction, 'form': form}
 
     return AvocadoDataFormView(request=request).render_to_response(context)
