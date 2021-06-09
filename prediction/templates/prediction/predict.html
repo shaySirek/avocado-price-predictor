@@ -1,18 +1,25 @@
-<h1 style="margin-bottom: 2em; color:#4a551b">Avocado Average Price Prediction</h1>
+<html>
+    <head>
+        <title>Avocado Price Predictor</title>
+    </head>
+    <body>
+        <h1 style="margin-bottom: 2em; color:#4a551b">Avocado Average Price Prediction</h1>
 
-<form action="{% url 'predict' %}" method="POST">
-    {% csrf_token %}
-    {% for field in form %}
-        <div style="margin-top: 1em;">
-            <label for="{{ field.auto_id }}" id="{{ field.auto_id }}-label" style="margin-right: 2em;">{{ field.label }}</label>
-            {{ field }}
+        <form action="{% url 'predict' %}" method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+                <div style="margin-top: 1em;">
+                    <label for="{{ field.auto_id }}" id="{{ field.auto_id }}-label" style="margin-right: 2em;">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+            {% endfor %}
+            <input type="submit" value="Predict" style="margin-top: 2em;">
+        </form>
+
+        {% if predicted_average_price %}
+        <div style="margin-top: 2em;">
+            <h4>Predicted Average Price: {{ predicted_average_price }}</h4>
         </div>
-    {% endfor %}
-    <input type="submit" value="Predict" style="margin-top: 2em;">
-</form>
-
-{% if predicted_average_price %}
-<div style="margin-top: 2em;">
-    <h4>Predicted Average Price: {{ predicted_average_price }}</h4>
-</div>
-{% endif %}
+        {% endif %}
+    </body>
+</html>
