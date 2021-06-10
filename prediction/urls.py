@@ -14,8 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from django.conf.urls import url
+from django.urls import path, re_path
 from django.views.generic.base import TemplateView
 from . import views
 
@@ -23,5 +22,5 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('predict/', views.predict, name='predict'),
-    url(r'^$', TemplateView.as_view(template_name='prediction/predict.html'), name='index')
+    re_path(r'^$', TemplateView.as_view(template_name='prediction/predict.html'), name='index')
 ]

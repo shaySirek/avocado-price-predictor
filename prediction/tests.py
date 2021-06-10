@@ -1,6 +1,7 @@
 import pytest
 from django.urls import reverse
 from http import HTTPStatus
+from json import dumps
 
 
 @pytest.fixture
@@ -21,22 +22,24 @@ def test_method_not_allowed(client):
     assert response.status_code == HTTPStatus.METHOD_NOT_ALLOWED
     
 def test_empty(client):
-    response = client.post(reverse('predict'))
+    data = dict()
+    
+    response = client.post(reverse('predict'), dumps(data).encode('utf-8'), content_type="application/json")
     assert response.status_code == HTTPStatus.BAD_REQUEST
 
 def test_invalid_data(client, data):
     data['sold_plu_4046'] = 'not number'
 
-    response = client.post(reverse('predict'), data)
+    response = client.post(reverse('predict'), dumps(data).encode('utf-8'), content_type="application/json")
     assert response.status_code == HTTPStatus.BAD_REQUEST
 
 def test_missing_field(client, data):
     del data['sold_plu_4046']
 
-    response = client.post(reverse('predict'), data)
+    response = client.post(reverse('predict'), dumps(data).encode('utf-8'), content_type="application/json")
     assert response.status_code == HTTPStatus.BAD_REQUEST
 
 def test_valid(client, data):
-    response = client.post(reverse('predict'), data)
+    response = client.post(reverse('predict'), dumps(data).encode('utf-8'), content_type="application/json")
     assert response.status_code == HTTPStatus.OK
     assert "1019" in response.content.decode('utf-8')
