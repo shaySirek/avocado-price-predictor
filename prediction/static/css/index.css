@@ -1,0 +1,20 @@
+.title {
+    margin-bottom: 2em;
+    color:#4a551b
+}
+
+form div {
+    margin-top: 1em;
+}
+
+form div label {
+    margin-right: 2em;
+}
+
+.submit {
+    margin-top: 2em;
+}
+
+.answer {
+    margin-top: 2em;
+}

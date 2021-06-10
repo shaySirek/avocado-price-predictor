@@ -1,25 +1,57 @@
-<html>
-    <head>
-        <title>Avocado Price Predictor</title>
-    </head>
-    <body>
-        <h1 style="margin-bottom: 2em; color:#4a551b">Avocado Average Price Prediction</h1>
+{% load static %}
 
-        <form action="{% url 'predict' %}" method="POST">
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Avocado Price Predictor</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.2/angular.min.js" integrity="sha512-7oYXeK0OxTFxndh0erL8FsjGvrl2VMDor6fVqzlLGfwOQQqTbYsGPv4ZZ15QHfSk80doyaM0ZJdvkyDcVO7KFA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script type="text/javascript" lang="javascript" src="{% static 'js/index.js' %}"></script>        
+        <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    </head>
+    <body ng-app="avocadoPrediction" ng-controller="avocadoPredictionCtrl">
+        <h1 class="title">Avocado Average Price Prediction</h1>
+
+        <form name="predictForm" ng-submit="predict(this)">
             {% csrf_token %}
-            {% for field in form %}
-                <div style="margin-top: 1em;">
-                    <label for="{{ field.auto_id }}" id="{{ field.auto_id }}-label" style="margin-right: 2em;">{{ field.label }}</label>
-                    {{ field }}
-                </div>
-            {% endfor %}
-            <input type="submit" value="Predict" style="margin-top: 2em;">
+            <div>
+                <label for="sold_plu_4046">Sold plu 4046</label>
+                <input type="number" name="sold_plu_4046" ng-model="sold_plu_4046" required />
+            </div>
+            <div>
+                <label for="sold_plu_4225">Sold plu 4225</label>
+                <input type="number" name="sold_plu_4225" ng-model="sold_plu_4225" required />
+            </div>
+            <div>
+                <label for="sold_plu_4770">Sold plu 4770</label>
+                <input type="number" name="sold_plu_4770" ng-model="sold_plu_4770" required />
+            </div>
+            <div>
+                <label for="small_bags">Small bags</label>
+                <input type="number" name="small_bags" ng-model="small_bags" required />
+            </div>
+            <div>
+                <label for="large_bags">Large bags</label>
+                <input type="number" name="large_bags" ng-model="large_bags" required />
+            </div>
+            <div>
+                <label for="xlarge_bags">Xlarge bags</label>
+                <input type="number" name="xlarge_bags" ng-model="xlarge_bags" required />
+            </div>
+            <div>
+                <label for="organic">Organic</label>
+                <input type="checkbox" name="organic" ng-model="organic" required />
+            </div>
+            <div>
+                <label for="region">Region</label>
+                <input type="text" name="region" ng-model="region" required />
+            </div>
+            <input type="submit" value="Predict" class="submit">
         </form>
 
-        {% if predicted_average_price %}
-        <div style="margin-top: 2em;">
-            <h4>Predicted Average Price: {{ predicted_average_price }}</h4>
+        <div class="answer">
+            <h4 ng-bind="predicted_average_price"></h4>
         </div>
-        {% endif %}
+        
     </body>
 </html>

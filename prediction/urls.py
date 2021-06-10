@@ -15,11 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls import url
+from django.views.generic.base import TemplateView
 from . import views
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.AvocadoDataFormView.as_view(), name='form'),
     path('predict/', views.predict, name='predict'),
+    url(r'^$', TemplateView.as_view(template_name='prediction/predict.html'), name='index')
 ]
