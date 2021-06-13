@@ -15,6 +15,12 @@ def predict(request):
     if not serializer.is_valid():
         return HttpResponseBadRequest()
 
-    prediction = serializer.data.get('sold_plu_4046') + serializer.data.get('sold_plu_4225') + 2*serializer.data.get('small_bags') + 1000
+    prediction = serializer.data.get('sold_plu_4046') + serializer.data.get(
+        'sold_plu_4225') + 2*serializer.data.get('small_bags') + 1000
 
     return JsonResponse({'predicted_average_price': prediction})
+
+
+@require_http_methods(["GET"])
+def default(request):
+    return JsonResponse({f: "" for f in AvocadoDataForm.Meta.fields})

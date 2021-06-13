@@ -2,56 +2,70 @@
 
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>Avocado Price Predictor</title>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.2/angular.min.js" integrity="sha512-7oYXeK0OxTFxndh0erL8FsjGvrl2VMDor6fVqzlLGfwOQQqTbYsGPv4ZZ15QHfSk80doyaM0ZJdvkyDcVO7KFA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        <script type="text/javascript" lang="javascript" src="{% static 'js/index.js' %}"></script>        
-        <link rel="stylesheet" href="{% static 'css/index.css' %}">
-    </head>
-    <body ng-app="avocadoPrediction" ng-controller="avocadoPredictionCtrl">
-        <h1 class="title">Avocado Average Price Prediction</h1>
 
-        <form name="predictForm" ng-submit="predict(this)">
-            {% csrf_token %}
-            <div>
-                <label for="sold_plu_4046">Sold plu 4046</label>
-                <input type="number" name="sold_plu_4046" ng-model="sold_plu_4046" required />
-            </div>
-            <div>
-                <label for="sold_plu_4225">Sold plu 4225</label>
-                <input type="number" name="sold_plu_4225" ng-model="sold_plu_4225" required />
-            </div>
-            <div>
-                <label for="sold_plu_4770">Sold plu 4770</label>
-                <input type="number" name="sold_plu_4770" ng-model="sold_plu_4770" required />
-            </div>
-            <div>
-                <label for="small_bags">Small bags</label>
-                <input type="number" name="small_bags" ng-model="small_bags" required />
-            </div>
-            <div>
-                <label for="large_bags">Large bags</label>
-                <input type="number" name="large_bags" ng-model="large_bags" required />
-            </div>
-            <div>
-                <label for="xlarge_bags">Xlarge bags</label>
-                <input type="number" name="xlarge_bags" ng-model="xlarge_bags" required />
-            </div>
-            <div>
-                <label for="organic">Organic</label>
-                <input type="checkbox" name="organic" ng-model="organic" required />
-            </div>
-            <div>
-                <label for="region">Region</label>
-                <input type="text" name="region" ng-model="region" required />
-            </div>
-            <input type="submit" value="Predict" class="submit">
-        </form>
+<head>
+    <meta charset="utf-8">
+    <title>Avocado Price Predictor</title>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.2.1/angular-material.min.css">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+</head>
 
-        <div class="answer">
-            <h4 ng-bind="predicted_average_price"></h4>
-        </div>
-        
-    </body>
+<body>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-messages.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.2.1/angular-material.min.js"></script>
+    <script type="text/javascript" lang="javascript" src="{% static 'js/index.js' %}"></script>
+
+    <md-toolbar>
+        <h2 class="md-toolbar-tools">
+            <span>Avocado Average Price Prediction</span>
+        </h2>
+    </md-toolbar>
+    <div ng-app="avocadoPrediction" ng-controller="avocadoPredictionCtrl" layout="column" ng-cloak>
+        <md-content layout-padding>
+            <form name="predictForm" ng-submit="predict()">
+                {% csrf_token %}
+                <div layout="row" layout-padding>
+                    <number-input name="sold_plu_4046" label="Sold plu 4046" flex=33.3></number-input>
+                    <number-input name="sold_plu_4225" label="Sold plu 4225" flex=33.3></number-input>
+                    <number-input name="sold_plu_4770" label="Sold plu 4770" flex=33.3></number-input>
+                </div>
+                <div layout="row" layout-padding>
+                    <number-input name="small_bags" label="Small bags" flex=33.3></number-input>
+                    <number-input name="large_bags" label="Large bags" flex=33.3></number-input>
+                    <number-input name="xlarge_bags" label="Xlarge bags" flex=33.3></number-input>
+                </div>
+                <md-input-container class="md-block">
+                    <md-checkbox name="organic" ng-model="avocado.organic">
+                        Organic
+                    </md-checkbox>
+                </md-input-container>
+                <md-input-container class="md-block">
+                    <label>Region</label>
+                    <input md-maxlength="50" required md-no-asterisk name="region" ng-model="avocado.region">
+                    <div ng-messages="predictForm.region.$error">
+                        <div ng-message="required">Region is required.</div>
+                        <div ng-message="md-maxlength">The Region must be less than 50 characters long.</div>
+                    </div>
+                </md-input-container>
+                <div>
+                    <md-button md-no-ink class="md-primary" type="submit">Predict</md-button>
+                </div>
+            </form>
+        </md-content>
+        <md-toolbar ng-show="predicted_average_price != undefined">
+            <h2 class="md-toolbar-tools">
+                <span ng-bind="predicted_average_price" class="answer"></span>
+            </h2>
+        </md-toolbar>
+        <md-toolbar ng-show="error != undefined" class="md-warn">
+            <h2 class="md-toolbar-tools">
+                <span ng-bind="error" class="error"></span>
+            </h2>
+        </md-toolbar>
+    </div>
+</body>
+
 </html>
