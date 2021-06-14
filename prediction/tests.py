@@ -1,6 +1,7 @@
 import pytest
 from django.urls import reverse
 from http import HTTPStatus
+from json import dumps, loads
 
 
 @pytest.fixture
@@ -12,31 +13,48 @@ def data():
         'small_bags': 4,
         'large_bags': 0,
         'xlarge_bags': 0,
-        'organic': 'on',
+        'organic': True,
         'region': 'Albany'
     }
 
-def test_method_not_allowed(client):
+def test_price_prediction_method_not_allowed(client):
     response = client.get(reverse('predict'))
     assert response.status_code == HTTPStatus.METHOD_NOT_ALLOWED
+
+def test_price_prediction_empty(client):
+    data = dict()
     
-def test_empty(client):
-    response = client.post(reverse('predict'))
+    response = client.post(reverse('predict'), dumps(data).encode('utf-8'), content_type="application/json")
     assert response.status_code == HTTPStatus.BAD_REQUEST
 
-def test_invalid_data(client, data):
+def test_price_prediction_invalid_data(client, data):
     data['sold_plu_4046'] = 'not number'
 
-    response = client.post(reverse('predict'), data)
+    response = client.post(reverse('predict'), dumps(data).encode('utf-8'), content_type="application/json")
     assert response.status_code == HTTPStatus.BAD_REQUEST
 
-def test_missing_field(client, data):
+def test_price_prediction_missing_field(client, data):
     del data['sold_plu_4046']
 
-    response = client.post(reverse('predict'), data)
+    response = client.post(reverse('predict'), dumps(data).encode('utf-8'), content_type="application/json")
     assert response.status_code == HTTPStatus.BAD_REQUEST
 
-def test_valid(client, data):
-    response = client.post(reverse('predict'), data)
+def test_price_prediction_valid(client, data):
+    response = client.post(reverse('predict'), dumps(data).encode('utf-8'), content_type="application/json")
     assert response.status_code == HTTPStatus.OK
-    assert "1019" in response.content.decode('utf-8')
+
+    content = loads(response.content.decode('utf-8'))
+    assert 'predicted_average_price' in content.keys()
+    assert content['predicted_average_price'] == 1019
+
+def test_default_method_not_allowed(client):
+    response = client.post(reverse('default'))
+    assert response.status_code == HTTPStatus.METHOD_NOT_ALLOWED
+
+def test_default_valid(client, data):
+    response = client.get(reverse('default'))
+    assert response.status_code == HTTPStatus.OK
+
+    content = loads(response.content.decode('utf-8'))
+    assert data.keys() == content.keys()
+    assert sum(len(v) > 0 for v in content.values()) == 0
