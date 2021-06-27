@@ -3,6 +3,8 @@ from django.views.decorators.http import require_http_methods
 from json import loads
 from .forms import AvocadoDataForm
 from .serializers import AvocadoDataSerializer
+from avocado_price_predictor_model import predict as predictor
+from datetime import datetime
 
 
 @require_http_methods(["POST"])
@@ -15,8 +17,10 @@ def predict(request):
     if not serializer.is_valid():
         return HttpResponseBadRequest()
 
-    prediction = serializer.data.get('sold_plu_4046') + serializer.data.get(
-        'sold_plu_4225') + 2*serializer.data.get('small_bags') + 1000
+    data = dict(serializer.data)
+    data['date'] = datetime.now().strftime('%Y-%m-%d')
+
+    prediction = predictor.predict(data)
 
     return JsonResponse({'predicted_average_price': prediction})
 

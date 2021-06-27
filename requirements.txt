@@ -1,5 +1,6 @@
-pytest
-pytest-django
 Django
 djangorestframework
+pytest
+pytest-django
 tox
+avocado-price-predictor-model
