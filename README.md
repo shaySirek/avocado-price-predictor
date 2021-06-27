@@ -12,3 +12,5 @@ Run `tox`
 
 # Running
 Run `./manage.py runserver`
+
+![Website](website.png)
