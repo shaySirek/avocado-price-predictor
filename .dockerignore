@@ -148,6 +148,7 @@ tox.ini
 # Docker
 .docker*
 Dockerfile
+*.yml
 
 # vscode settings
 .vscode
