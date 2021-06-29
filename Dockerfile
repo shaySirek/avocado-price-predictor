@@ -9,4 +9,6 @@ COPY . .
 EXPOSE 8000
 
 RUN mkdir /.cache && chmod g+w /.cache .
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+# --insecure for static files serving.
+CMD ["python", "manage.py", "runserver", "--insecure", "0.0.0.0:8000"]
