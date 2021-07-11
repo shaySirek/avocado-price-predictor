@@ -10,4 +10,4 @@ Web Application to predict avocado average price using [Machine Learning](https:
 - Openshift: `oc process -f openshift.yml | oc create -f -`
 
 ---
-![website](website.png)
+![website](https://github.com/shaySirek/avocado-price-predictor/blob/master/website.png)
