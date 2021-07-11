@@ -45,8 +45,7 @@ def test_price_prediction_valid(client, data):
 
     content = loads(response.content.decode('utf-8'))
     assert 'predicted_average_price' in content.keys()
-    assert content['predicted_average_price'] == 1019
-
+   
 def test_default_method_not_allowed(client):
     response = client.post(reverse('default'))
     assert response.status_code == HTTPStatus.METHOD_NOT_ALLOWED
@@ -57,4 +56,4 @@ def test_default_valid(client, data):
 
     content = loads(response.content.decode('utf-8'))
     assert data.keys() == content.keys()
-    assert sum(len(v) > 0 for v in content.values()) == 0
+    assert all(len(v) == 0 for v in content.values())

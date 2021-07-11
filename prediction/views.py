@@ -1,11 +1,16 @@
+from json import loads
+from datetime import datetime
+from os import environ
 from django.http import HttpResponseBadRequest, JsonResponse
 from django.views.decorators.http import require_http_methods
-from json import loads
 from .forms import AvocadoDataForm
 from .serializers import AvocadoDataSerializer
-from avocado_price_predictor_model import predict as predictor
-from datetime import datetime
+import avocado_price_predictor_model.load_model as model_loader
+import avocado_price_predictor_model.predict as predictor
+from avocado_price_predictor_model.preprocess import DATE_FORMAT
 
+
+model = model_loader.load_model(environ['MODEL_URL'])
 
 @require_http_methods(["POST"])
 def predict(request):
@@ -18,9 +23,9 @@ def predict(request):
         return HttpResponseBadRequest()
 
     data = dict(serializer.data)
-    data['date'] = datetime.now().strftime('%Y-%m-%d')
+    data['date'] = datetime.now().strftime(DATE_FORMAT)
 
-    prediction = predictor.predict(data)
+    prediction = predictor.predict(model, data)
 
     return JsonResponse({'predicted_average_price': prediction})
 

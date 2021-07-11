@@ -32,6 +32,8 @@ objects:
           env:
           - name: HOST
             value: "avocado-price-predictor.${DOMAIN}"
+          - name: MODEL_URL
+            value: "${MODEL_URL}"
         restartPolicy: Always
         imagePullPolicy: Always
 - kind: Service
@@ -67,3 +69,7 @@ parameters:
     displayName: Openshift Cluster Domain
     required: true
     value: 'apps-crc.testing'
+  - name: MODEL_URL
+    displayName: Model URL
+    required: true
+    value: 'https://drive.google.com/uc?id=1UiH6y3kvlWcGTpH9AV9qsQrjJZ-X9f2s'
